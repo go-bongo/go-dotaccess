@@ -28,6 +28,13 @@ func Get(obj interface{}, prop string) (interface{}, error) {
 
 // Loop through this to get properties via dot notation
 func getProperty(obj interface{}, prop string) (interface{}, error) {
+
+	if reflect.TypeOf(obj).Kind() == reflect.Map {
+
+		val := reflect.ValueOf(obj)
+		return val.MapIndex(reflect.ValueOf(prop)).Interface(), nil
+	}
+
 	prop = strings.Title(prop)
 	return reflections.GetField(obj, prop)
 }
@@ -53,6 +60,13 @@ func Set(obj interface{}, prop string, value interface{}) error {
 }
 
 func setProperty(obj interface{}, prop string, val interface{}) error {
+	if reflect.TypeOf(obj).Kind() == reflect.Map {
+
+		value := reflect.ValueOf(obj)
+		value.SetMapIndex(reflect.ValueOf(prop), reflect.ValueOf(val))
+		return nil
+	}
+
 	if reflect.TypeOf(obj).Kind() != reflect.Ptr {
 		return errors.New("Object must be a pointer to a struct")
 	}

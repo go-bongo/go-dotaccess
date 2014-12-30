@@ -38,7 +38,7 @@ type ChildStruct struct {
 	Baz string
 }
 
-func (s *TestSuite) TestGetDot(c *C) {
+func (s *TestSuite) TestGetStruct(c *C) {
 	test := &TestStruct{
 		Foo: 5,
 		Child: ChildStruct{
@@ -60,27 +60,62 @@ func (s *TestSuite) TestGetDot(c *C) {
 	c.Assert(err, Not(Equals), nil)
 }
 
-func (s *TestSuite) TestSetDot(c *C) {
-	test := &TestStruct{
-		Foo: 5,
-		Child: ChildStruct{
-			Baz: "baz",
-		},
-		ChildRef: &ChildStruct{
-			Baz: "bing",
+func (s *TestSuite) TestGetMap(c *C) {
+	test := map[string]interface{}{
+		"foo": "5",
+		"child": map[string]int{
+			"a": 1,
+			"b": 1,
 		},
 	}
 
-	// err := reflections.SetField(test.ChildRef, "Baz", "boop")
-	// log.Println(err)
-
-	Set(test, "foo", 6)
-	c.Assert(test.Foo, Equals, 6)
-
-	err := Set(test, "child.baz", "bar")
-	c.Assert(err, Not(IsNil))
-
-	Set(test, "childRef.baz", "boof")
-	c.Assert(test.ChildRef.Baz, Equals, "boof")
-
+	getFoo, _ := Get(test, "foo")
+	getChild, _ := Get(test, "child.a")
+	c.Assert(getFoo, Equals, "5")
+	c.Assert(getChild, Equals, 1)
 }
+
+// func (s *TestSuite) TestSetStruct(c *C) {
+// 	test := &TestStruct{
+// 		Foo: 5,
+// 		Child: ChildStruct{
+// 			Baz: "baz",
+// 		},
+// 		ChildRef: &ChildStruct{
+// 			Baz: "bing",
+// 		},
+// 	}
+
+// 	// err := reflections.SetField(test.ChildRef, "Baz", "boop")
+// 	// log.Println(err)
+
+// 	Set(test, "foo", 6)
+// 	c.Assert(test.Foo, Equals, 6)
+
+// 	err := Set(test, "child.baz", "bar")
+// 	c.Assert(err, Not(IsNil))
+
+// 	Set(test, "childRef.baz", "boof")
+// 	c.Assert(test.ChildRef.Baz, Equals, "boof")
+
+// }
+
+// func (s *TestSuite) TestSetMap(c *C) {
+// 	test := map[string]interface{}{
+// 		"foo": "5",
+// 		"child": map[string]int{
+// 			"a": 1,
+// 			"b": 1,
+// 		},
+// 	}
+
+// 	Set(test, "foo", "7")
+// 	c.Assert(test["foo"], Equals, "7")
+
+// 	Set(test, "child.a", 2)
+
+// 	// Assert
+// 	// i, _ := test.(map[string]interface{})
+// 	c.Assert(test["child"], Equals, 2)
+// 	// log.Println(i)
+// }

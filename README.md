@@ -1,10 +1,12 @@
-Dot notation set/get. Mainly just a wrapper for github.com/oleiade/reflections, so that should get most of the credit.
+Dot notation map/struct access. Mainly just a wrapper for github.com/oleiade/reflections, so that should get most of the credit.
 
-Note that for now setting only works on pointers to structs. Getting works on nested structs and nested struct pointers.
+Setting is in development. Getting works 100%.
 
-Since this is intended to work on public properties, each element in the dot notation string is converted to title case.
+Since this is intended to work on public properties, each element in the dot notation string is converted to title case if the object is a struct. They remain as-is if it's a map.
 
 # Get
+
+## Struct
 ```go
 type ChildStruct struct {
 	Prop string
@@ -25,12 +27,20 @@ val, err = dotaccess.Get(myStruct, "foo.bar")
 //returns nil, error
 ```
 
-# Set
+## Map
+
+Maps will not return errors if the key does not exist, only nil.
+
 ```go
-err := dotaccess.Set(myStruct, "nested.prop", "bar")
 
-fmt.Println(myStruct.Nested.Prop)
-// "bar"
+myMap := map[string]interface{}{
+	"nested":map[string]string{
+		"prop":"foo"
+	}
+}
+val, err := dotaccess.Get(myMap, "nested.prop")
+// returns "foo", nil
+
+val, err = dotaccess.Get(myStruct, "foo.bar")
+//returns nil, nil
 ```
-
-
