@@ -32,6 +32,12 @@ func getProperty(obj interface{}, prop string) (interface{}, error) {
 	if reflect.TypeOf(obj).Kind() == reflect.Map {
 
 		val := reflect.ValueOf(obj)
+
+		valueOf := val.MapIndex(reflect.ValueOf(prop))
+
+		if valueOf == reflect.Zero(reflect.ValueOf(prop).Type()) {
+			return nil, nil
+		}
 		return val.MapIndex(reflect.ValueOf(prop)).Interface(), nil
 	}
 
