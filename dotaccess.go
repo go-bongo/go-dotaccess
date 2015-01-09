@@ -22,6 +22,9 @@ func Get(obj interface{}, prop string) (interface{}, error) {
 		if err != nil {
 			return nil, err
 		}
+		if obj == nil {
+			return nil, nil
+		}
 	}
 	return obj, nil
 }
@@ -38,7 +41,13 @@ func getProperty(obj interface{}, prop string) (interface{}, error) {
 		if valueOf == reflect.Zero(reflect.ValueOf(prop).Type()) {
 			return nil, nil
 		}
-		return val.MapIndex(reflect.ValueOf(prop)).Interface(), nil
+
+		idx := val.MapIndex(reflect.ValueOf(prop))
+
+		if !idx.IsValid() {
+			return nil, nil
+		}
+		return idx.Interface(), nil
 	}
 
 	prop = strings.Title(prop)
