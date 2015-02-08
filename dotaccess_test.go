@@ -100,22 +100,22 @@ func (s *TestSuite) TestGetMap(c *C) {
 
 // }
 
-// func (s *TestSuite) TestSetMap(c *C) {
-// 	test := map[string]interface{}{
-// 		"foo": "5",
-// 		"child": map[string]int{
-// 			"a": 1,
-// 			"b": 1,
-// 		},
-// 	}
+func (s *TestSuite) TestSetMap(c *C) {
+	test := map[string]interface{}{
+		"foo": "5",
+		"child": map[string]int{
+			"a": 1,
+			"b": 1,
+		},
+	}
 
-// 	Set(test, "foo", "7")
-// 	c.Assert(test["foo"], Equals, "7")
+	Set(test, "foo", "7")
+	c.Assert(test["foo"], Equals, "7")
 
-// 	Set(test, "child.a", 2)
+	Set(test, "child.a", 2)
 
-// 	// Assert
-// 	// i, _ := test.(map[string]interface{})
-// 	c.Assert(test["child"], Equals, 2)
-// 	// log.Println(i)
-// }
+	// Assert
+	mp := test["child"].(map[string]int)
+	c.Assert(mp["a"], Equals, 2)
+	// log.Println(i)
+}
